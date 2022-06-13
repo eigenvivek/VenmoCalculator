@@ -45,9 +45,11 @@ def get_ledger(df, attendees, payers):
 
     # Simplify the ledger by removing redundancies across payers
     for payer in payers:
-        ledger.at[payer, payer] = 0
+        ledger.at[payer, payer] = 0  # Don't pay yourself
     for payer_1, payer_2 in combinations(payers, r=2):
-        back = min(ledger.at[payer_1, payer_2], ledger.at[payer_2, payer_1])
+        back = min(
+            ledger.at[payer_1, payer_2], ledger.at[payer_2, payer_1]
+        )  # If two people owe each other money, subtract the minimum amount so only one transaction needs to happen
         ledger.at[payer_1, payer_2] -= back
         ledger.at[payer_2, payer_1] -= back
 
