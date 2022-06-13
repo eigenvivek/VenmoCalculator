@@ -1,0 +1,26 @@
+Payer,Item,Price,People
+Vivek,Airbnb,$291.10,All
+Vivek,Uber 1,$27.80,All
+Vivek,Uber 2,$34.50,All
+Vivek,Kaykaing,$89.76,All
+Vivek,RISD Tickets,$40.00,All
+Noah,Julians - Iced Coffee,$3.00,Gari
+Noah,Julians - Coffee,$7.00,"Vivek, Jacob"
+Noah,Julians - BUCC,$16.00,Gari
+Noah,Julians - BUCC,$16.00,Vivek
+Noah,Jullians - Special Hash,$18.00,Jacob
+Noah,Julians - Special Omelete,$18.00,Daniel
+Noah,Julians - Special Omelete,$18.00,Noah
+Noah,Julians - Tax and Tip,$26.88,All
+Gari,Tavern - Downeast 20 oz (x2),$17.00,Vivek
+Gari,Tavern - Downeast 20 oz,$8.50,Daniel
+Gari,Tavern - Sangria,$10.00,Gari
+Gari,Tavern - Kentucky Vanilla,$7.50,Jacob
+Gari,Tavern - Nachos,$15.00,All
+Gari,Tavern - Wings,$13.00,"Gari, Vivek, Daniel, Jacob"
+Gari,Tavern - Steak Sandwich ,$14.00,Gari
+Gari,Tavern - Angus Cheeseburg,$12.00,Daniel
+Gari,Tavern - Poliquin,$22.00,Noah
+Gari,Tavern - Fish Tacos,$15.00,Vivek
+Gari,Tavern - Western Burger ,$13,Jacob
+Gari,Tavern - Tax + Tip,$11.76,All
