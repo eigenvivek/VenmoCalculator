@@ -4,9 +4,10 @@ import click
 import pandas as pd
 
 
-def read_dataframe(filename, price_col="Price"):
+def read_dataframe(filename, price_col="Price", payers_col="Payer"):
     df = pd.read_csv(filename)
     df[price_col] = df[price_col].apply(lambda x: float(x[1:]))
+    df[payers_col] = df[payers_col].apply(lambda x: x.rstrip())
     return df
 
 
