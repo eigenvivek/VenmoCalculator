@@ -28,12 +28,15 @@ def get_payers(df, payers_col="Payer"):
     return df[payers_col].unique()
 
 
-def get_ledger(df, attendees, payers):
+def get_ledger(
+    df, attendees, payers, price_col="Price", payers_col="Payer", people_col="People"
+):
     num_attendees = len(attendees)
 
     # Fill in the ledger of who owes whom what
     ledger = pd.DataFrame(0, columns=payers, index=attendees, dtype=float)
-    for _, (payer, _, price, people) in df.iterrows():
+    for _, row in df.iterrows():
+        payer, price, people = row[[payers_col, price_col, people_col]]
         if people == "All":
             for attendee in attendees:
                 ledger.at[attendee, payer] += price / num_attendees
