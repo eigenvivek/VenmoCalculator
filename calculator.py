@@ -11,8 +11,11 @@ def read_dataframe(filename, price_col="Price", payers_col="Payer"):
     return df
 
 
-def get_attendees(df, people_col="People"):
-    attendees = []
+def get_attendees(df, all=None, people_col="People"):
+    if all is None:
+        attendees = []
+    else:
+        attendees = [person.lstrip() for person in all.split(",")]
     for people in df[people_col]:
         if people == "All":
             continue
@@ -65,10 +68,12 @@ def get_ledger(
 
 @click.command()
 @click.option("--filename", "-f", type=click.Path(exists=True), required=True)
-def main(filename):
+@click.option("--all", type=str, required=False)
+def main(filename, all):
     df = read_dataframe(filename)
-    attendees = get_attendees(df)
+    attendees = get_attendees(df, all)
     payers = get_payers(df)
+    attendees = list(set(attendees).union(set(payers)))
     ledger = get_ledger(df, attendees, payers)
     print(ledger)
 
