@@ -4,11 +4,17 @@ import click
 import pandas as pd
 
 
-def read_dataframe(filename, price_col="Price", payers_col="Payer"):
+def read_dataframe(filename, item_col="Item", price_col="Price", payers_col="Payer", special_rows=["Tax", "Tip"]):
     df = pd.read_csv(filename)
     df[price_col] = df[price_col].apply(lambda x: float(x[1:]))
     df[payers_col] = df[payers_col].apply(lambda x: x.rstrip())
-    return df
+
+    # Split the special rows into their own dataframe
+    special_df = df[df[item_col].isin(special_rows)]
+    taxtip = special_df[price_col].sum()
+    df = df[~df[item_col].isin(special_rows)]
+
+    return df, taxtip
 
 
 def get_attendees(df, all=None, people_col="People"):
@@ -33,7 +39,7 @@ def get_payers(df, payers_col="Payer"):
 
 
 def get_ledger(
-    df, attendees, payers, price_col="Price", payers_col="Payer", people_col="People"
+    df, attendees, payers, taxtip, price_col="Price", payers_col="Payer", people_col="People"
 ):
     num_attendees = len(attendees)
 
@@ -49,6 +55,14 @@ def get_ledger(
             for person in people:
                 person = person.lstrip()
                 ledger.at[person, payer] += price / len(people)
+            
+    # Add the tax and tip proportional to each person's share
+    subtotal = ledger.sum().sum()
+    for attendee in attendees:
+        for payer in payers:
+            prop_taxtip = taxtip * ledger.at[attendee, payer] / subtotal
+            ledger.at[attendee, payer] += prop_taxtip
+    total = ledger.sum().sum()
 
     # Simplify the ledger by removing redundancies across payers
     for payer in payers:
@@ -60,23 +74,22 @@ def get_ledger(
         ledger.at[payer_1, payer_2] -= back
         ledger.at[payer_2, payer_1] -= back
 
-    # Convert to real money!
-    ledger = ledger.applymap(lambda x: "${:.2f}".format(x))
-
-    return ledger
+    ledger = ledger.applymap(lambda x: "${:.2f}".format(x))  # Convert to real money!
+    return ledger, total
 
 
 @click.command()
 @click.option("--filename", "-f", type=click.Path(exists=True), required=True)
 @click.option("--all", type=str, required=False)
 def main(filename, all):
-    df = read_dataframe(filename)
+    df, taxtip = read_dataframe(filename)
     attendees = get_attendees(df, all)
     payers = get_payers(df)
     attendees = list(set(attendees).union(set(payers)))
-    ledger = get_ledger(df, attendees, payers)
+    ledger, total = get_ledger(df, attendees, payers, taxtip)
     print(ledger)
-
+    print(total)
+    
 
 if __name__ == "__main__":
     main()
