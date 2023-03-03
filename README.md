@@ -26,4 +26,4 @@ To use with your own reciepts, make sure the input CSV has the columns
 Payer,Item,Price,People
 ```
 - If something was shared by all debtors (e.g., an appetizer), represent this entry with `All` in the `People` column
-- `Item` isn't used by the program to calculate anything
+- Denote `Tax` and `Tip` in the `Item` column to split proportional to each person's subtotal
