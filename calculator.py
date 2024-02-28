@@ -74,7 +74,7 @@ def get_ledger(
         ledger.at[payer_1, payer_2] -= back
         ledger.at[payer_2, payer_1] -= back
 
-    ledger = ledger.applymap(lambda x: "${:.2f}".format(x))  # Convert to real money!
+    ledger = ledger.map(lambda x: "${:.2f}".format(x))  # Convert to real money!
     return ledger, total
 
 
